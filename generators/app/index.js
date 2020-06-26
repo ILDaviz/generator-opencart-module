@@ -49,6 +49,9 @@ module.exports = yeoman.generators.Base.extend({
             name: 'module_type',
             message: 'What type of module do you want to create?',
             choices: [{
+                name: 'Dashboard',
+                value: 'dashboard'
+            },{
                 name: 'Module',
                 value: 'module'
             }, 
