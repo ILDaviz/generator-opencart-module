@@ -145,48 +145,49 @@ module.exports = yeoman.generators.Base.extend({
         }
 
         // CATALOG
-
-        this.fs.copyTpl(
-            this.templatePath(oc_version + '/_catalog_controller.php'),
-            this.destinationPath(_s(CONTROLLER_DIR).replaceAll('%c%', 'catalog').replaceAll('%t%', mod_type).value() + underscore_format + '.php'), {
-                classified_name: classify_format,
-                underscored_name: underscore_format,
-                module_type: mod_type
-            }
-        );
-
-        this.fs.copyTpl(
-            this.templatePath(oc_version + '/_catalog_language.php'),
-            this.destinationPath(_s(LANGUAGE_DIR).replaceAll('%c%', 'catalog').replaceAll('%t%', mod_type).value() + underscore_format + '.php'), {
-                titleized_name: titleize_format,
-                module_type: mod_type
-            }
-        );
-
-        this.fs.copyTpl(
-            this.templatePath(oc_version + '/_catalog_model.php'),
-            this.destinationPath(_s(MODEL_DIR).replaceAll('%c%', 'catalog').replaceAll('%t%', mod_type).value() + underscore_format + '.php'), {
-                classified_name: classify_format,
-                module_type: mod_type
-            }
-        );
-        
-        if( oc_version == '3.x' ) {
+        if(this.props.mod_type != 'dashboard') {
             this.fs.copyTpl(
-                this.templatePath(oc_version + '/_catalog_view.twig'),
-                this.destinationPath(_s(CATALOG_VIEW_DIR).replaceAll('%t%', mod_type).value() + underscore_format + '.twig'), {
+                this.templatePath(oc_version + '/_catalog_controller.php'),
+                this.destinationPath(_s(CONTROLLER_DIR).replaceAll('%c%', 'catalog').replaceAll('%t%', mod_type).value() + underscore_format + '.php'), {
+                    classified_name: classify_format,
+                    underscored_name: underscore_format,
+                    module_type: mod_type
+                }
+            );
+    
+            this.fs.copyTpl(
+                this.templatePath(oc_version + '/_catalog_language.php'),
+                this.destinationPath(_s(LANGUAGE_DIR).replaceAll('%c%', 'catalog').replaceAll('%t%', mod_type).value() + underscore_format + '.php'), {
                     titleized_name: titleize_format,
                     module_type: mod_type
                 }
             );
-        } else {
+    
             this.fs.copyTpl(
-                this.templatePath(oc_version + '/_catalog_view.tpl'),
-                this.destinationPath(_s(CATALOG_VIEW_DIR).replaceAll('%t%', mod_type).value() + underscore_format + '.tpl'), {
-                    titleized_name: titleize_format,
+                this.templatePath(oc_version + '/_catalog_model.php'),
+                this.destinationPath(_s(MODEL_DIR).replaceAll('%c%', 'catalog').replaceAll('%t%', mod_type).value() + underscore_format + '.php'), {
+                    classified_name: classify_format,
                     module_type: mod_type
                 }
             );
+            
+            if( oc_version == '3.x' ) {
+                this.fs.copyTpl(
+                    this.templatePath(oc_version + '/_catalog_view.twig'),
+                    this.destinationPath(_s(CATALOG_VIEW_DIR).replaceAll('%t%', mod_type).value() + underscore_format + '.twig'), {
+                        titleized_name: titleize_format,
+                        module_type: mod_type
+                    }
+                );
+            } else {
+                this.fs.copyTpl(
+                    this.templatePath(oc_version + '/_catalog_view.tpl'),
+                    this.destinationPath(_s(CATALOG_VIEW_DIR).replaceAll('%t%', mod_type).value() + underscore_format + '.tpl'), {
+                        titleized_name: titleize_format,
+                        module_type: mod_type
+                    }
+                );
+            }
         }
 
         // OCMOD
