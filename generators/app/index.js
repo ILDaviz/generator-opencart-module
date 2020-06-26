@@ -124,7 +124,6 @@ module.exports = yeoman.generators.Base.extend({
         );
 
         if( oc_version == '3.x' ) {
-            // If is new version
             this.fs.copyTpl(
                 this.templatePath(oc_version + '/_admin_view.twig'),
                 this.destinationPath(_s(ADMIN_VIEW_DIR).replaceAll('%t%', mod_type).value() + underscore_format + '.twig'), {
@@ -134,7 +133,6 @@ module.exports = yeoman.generators.Base.extend({
             );
 
         } else {
-            // If is old version
             this.fs.copyTpl(
                 this.templatePath(oc_version + '/_admin_view.tpl'),
                 this.destinationPath(_s(ADMIN_VIEW_DIR).replaceAll('%t%', mod_type).value() + underscore_format + '.tpl'), {
@@ -194,7 +192,7 @@ module.exports = yeoman.generators.Base.extend({
         if(this.props.ocmod == true) {
             this.fs.copyTpl(
                 this.templatePath(oc_version + '/_install.xml'),
-                this.destinationPath(VQMOD_DIR + underscore_format + '.xml'), {
+                this.destinationPath(OCMOD_DIR + underscore_format + '.xml'), {
                     titleized_name: titleize_format,
                     underscored_name: underscore_format
                 }
