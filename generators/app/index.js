@@ -12,7 +12,7 @@ var CONTROLLER_DIR = 'upload/%c%/controller/%t%/',
     MODEL_DIR = 'upload/%c%/model/%t%/',
     ADMIN_VIEW_DIR = 'upload/admin/view/template/%t%/',
     CATALOG_VIEW_DIR = 'upload/catalog/view/theme/default/template/%t%/',
-    VQMOD_DIR = 'upload/vqmod/xml/';
+    VQMOD_DIR = 'upload/vqmod/xml/',
     OCMOD_DIR = 'upload/';
 
 module.exports = yeoman.generators.Base.extend({
