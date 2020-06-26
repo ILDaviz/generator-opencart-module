@@ -38,6 +38,9 @@ module.exports = yeoman.generators.Base.extend({
             }, {
                 name: '2.x',
                 value: '2_x'
+            }, {
+                name: '3.x',
+                value: '3_x'
             }],
             default: 1
         }, {
