@@ -13,6 +13,7 @@ var CONTROLLER_DIR = 'upload/%c%/controller/%t%/',
     ADMIN_VIEW_DIR = 'upload/admin/view/template/%t%/',
     CATALOG_VIEW_DIR = 'upload/catalog/view/theme/default/template/%t%/',
     VQMOD_DIR = 'upload/vqmod/xml/';
+    OCMOD_DIR = 'upload/';
 
 module.exports = yeoman.generators.Base.extend({
     prompting: function() {
@@ -70,6 +71,12 @@ module.exports = yeoman.generators.Base.extend({
             default: 0
         }, {
             type: 'confirm',
+            name: 'ocmod',
+            message: 'Will the module require ocmod support?',
+            default: false
+        }
+        , {
+            type: 'confirm',
             name: 'vqmod',
             message: 'Will the module require vQmod support?',
             default: false
@@ -93,7 +100,7 @@ module.exports = yeoman.generators.Base.extend({
 
         this.log('Working...');
 
-        //admin
+        // ADMIN
 
         this.fs.copyTpl(
             this.templatePath(oc_version + '/_admin_controller.php'),
@@ -113,15 +120,28 @@ module.exports = yeoman.generators.Base.extend({
             }
         );
 
-        this.fs.copyTpl(
-            this.templatePath(oc_version + '/_admin_view.tpl'),
-            this.destinationPath(_s(ADMIN_VIEW_DIR).replaceAll('%t%', mod_type).value() + underscore_format + '.tpl'), {
-                underscored_name: underscore_format,
-                module_type: mod_type
-            }
-        );
+        if( oc_version == '3.x' ) {
+            // If is new version
+            this.fs.copyTpl(
+                this.templatePath(oc_version + '/_admin_view.twig'),
+                this.destinationPath(_s(ADMIN_VIEW_DIR).replaceAll('%t%', mod_type).value() + underscore_format + '.twig'), {
+                    underscored_name: underscore_format,
+                    module_type: mod_type
+                }
+            );
 
-        //catalog
+        } else {
+            // If is old version
+            this.fs.copyTpl(
+                this.templatePath(oc_version + '/_admin_view.tpl'),
+                this.destinationPath(_s(ADMIN_VIEW_DIR).replaceAll('%t%', mod_type).value() + underscore_format + '.tpl'), {
+                    underscored_name: underscore_format,
+                    module_type: mod_type
+                }
+            );
+        }
+
+        // CATALOG
 
         this.fs.copyTpl(
             this.templatePath(oc_version + '/_catalog_controller.php'),
@@ -147,16 +167,37 @@ module.exports = yeoman.generators.Base.extend({
                 module_type: mod_type
             }
         );
+        
+        if( oc_version == '3.x' ) {
+            this.fs.copyTpl(
+                this.templatePath(oc_version + '/_catalog_view.twig'),
+                this.destinationPath(_s(CATALOG_VIEW_DIR).replaceAll('%t%', mod_type).value() + underscore_format + '.twig'), {
+                    titleized_name: titleize_format,
+                    module_type: mod_type
+                }
+            );
+        } else {
+            this.fs.copyTpl(
+                this.templatePath(oc_version + '/_catalog_view.tpl'),
+                this.destinationPath(_s(CATALOG_VIEW_DIR).replaceAll('%t%', mod_type).value() + underscore_format + '.tpl'), {
+                    titleized_name: titleize_format,
+                    module_type: mod_type
+                }
+            );
+        }
 
-        this.fs.copyTpl(
-            this.templatePath(oc_version + '/_catalog_view.tpl'),
-            this.destinationPath(_s(CATALOG_VIEW_DIR).replaceAll('%t%', mod_type).value() + underscore_format + '.tpl'), {
-                titleized_name: titleize_format,
-                module_type: mod_type
-            }
-        );
+        // OCMOD
+        if(this.props.ocmod == true) {
+            this.fs.copyTpl(
+                this.templatePath(oc_version + '/_install.xml'),
+                this.destinationPath(VQMOD_DIR + underscore_format + '.xml'), {
+                    titleized_name: titleize_format,
+                    underscored_name: underscore_format
+                }
+            );
+        }
 
-        //vqmod
+        // VQMOD
         if (this.props.vqmod == true) {
             this.fs.copyTpl(
                 this.templatePath(oc_version + '/_vqmod.xml'),
