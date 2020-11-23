@@ -4,24 +4,24 @@ var chalk = require('chalk');
 var yosay = require('yosay');
 var _s = require('underscore.string');
 
-//
-var classify_format, underscore_format, titleize_format, oc_version, mod_type;
-
-var CONTROLLER_DIR = 'upload/%c%/controller/%t%/',
-    LANGUAGE_DIR = 'upload/%c%/language/english/%t%/',
-    MODEL_DIR = 'upload/%c%/model/%t%/',
-    ADMIN_VIEW_DIR = 'upload/admin/view/template/%t%/',
-    CATALOG_VIEW_DIR = 'upload/catalog/view/theme/default/template/%t%/',
-    VQMOD_DIR = 'upload/vqmod/xml/',
-    OCMOD_DIR = 'upload/';
+// Variable ambient
+var classify_format, 
+underscore_format, 
+titleize_format, 
+oc_version,
+mod_type;
+// Location
+var VQMOD_DIR = 'upload/vqmod/xml/',
+OCMOD_DIR = 'upload/';
 
 module.exports = yeoman.generators.Base.extend({
     prompting: function() {
+
         var done = this.async();
 
         // Have Yeoman greet the user.
         this.log(yosay(
-            'Welcome to the ' + chalk.blue('Opencart Module') + ' starter generator!'
+            'Welcome to the ' + chalk.blue('Opencart Module') + ' starter generator! V3.0'
         ));
 
         var prompts = [{
@@ -31,7 +31,7 @@ module.exports = yeoman.generators.Base.extend({
             default: this.appname
         }, {
             type: 'list',
-            name: 'version',
+            name: 'version opencart',
             message: 'What version of Opencart will your module be for?',
             choices: [{
                 name: '1.5.x',
@@ -54,7 +54,7 @@ module.exports = yeoman.generators.Base.extend({
             },{
                 name: 'Module',
                 value: 'module'
-            }, 
+            }/**, 
 			{
                 name: 'Payment',
                 value: 'payment'
@@ -70,7 +70,8 @@ module.exports = yeoman.generators.Base.extend({
 			{
                 name: 'Feed',
                 value: 'feed'
-            }],
+            }**/
+            ],
             default: 0
         }, {
             type: 'confirm',
@@ -105,88 +106,391 @@ module.exports = yeoman.generators.Base.extend({
 
         // ADMIN
 
-        this.fs.copyTpl(
-            this.templatePath(oc_version + '/_admin_controller.php'),
-            this.destinationPath(_s(CONTROLLER_DIR).replaceAll('%c%', 'admin').replaceAll('%t%', mod_type).value() + underscore_format + '.php'), {
-                classified_name: classify_format,
-                underscored_name: underscore_format,
-                module_type: mod_type
-            }
-        );
-
-        this.fs.copyTpl(
-            this.templatePath(oc_version + '/_admin_language.php'),
-            this.destinationPath(_s(LANGUAGE_DIR).replaceAll('%c%', 'admin').replaceAll('%t%', mod_type).value() + underscore_format + '.php'), {
-                titleized_name: titleize_format,
-                underscored_name: underscore_format,
-                module_type: mod_type
-            }
-        );
-
-        if( oc_version == '3.x' ) {
-            this.fs.copyTpl(
-                this.templatePath(oc_version + '/_admin_view.twig'),
-                this.destinationPath(_s(ADMIN_VIEW_DIR).replaceAll('%t%', mod_type).value() + underscore_format + '.twig'), {
-                    underscored_name: underscore_format,
-                    module_type: mod_type
+        switch (mod_type) {
+            /**
+             * CREATE DASHBOARD MODULE
+             */
+            case 'dashboard':
+                if( oc_version == '3.x' ) {
+                    // ADMIN
+                    this.fs.copyTpl(
+                        // Estract item
+                        this.templatePath(oc_version + '/' + mod_type + '/_admin_controller.php'),
+                        // Get location and copy
+                        this.destinationPath(_s('upload/%c%/controller/extension/%t%/').replaceAll('%c%', 'admin').replaceAll('%t%', mod_type).value() + underscore_format + '.php'), {
+                            classified_name: classify_format,
+                            module_type: mod_type
+                        }
+                    );
+                    this.fs.copyTpl(
+                        // Estract item
+                        this.templatePath(oc_version + '/' + mod_type + '/_admin_model.php'),
+                        // Get location and copy
+                        this.destinationPath(_s('upload/%c%/controller/extension/%t%/').replaceAll('%c%', 'admin').replaceAll('%t%', mod_type).value() + underscore_format + '.php'), {
+                            classified_name: classify_format,
+                            module_type: mod_type
+                        }
+                    );
+                    this.fs.copyTpl(
+                        // Estract item
+                        this.templatePath(oc_version + '/' + mod_type + '/_admin_langauge.php'),
+                        // Get location and copy
+                        this.destinationPath(_s('upload/%c%/controller/extension/%t%/').replaceAll('%c%', 'admin').replaceAll('%t%', mod_type).value() + underscore_format + '.php'), {
+                            classified_name: classify_format,
+                            module_type: mod_type
+                        }
+                    );
+                    this.fs.copyTpl(
+                        // Estract item
+                        this.templatePath(oc_version + '/' + mod_type + '/_admin_view.twig'),
+                        // Get location and copy
+                        this.destinationPath(_s('upload/%c%/controller/extension/%t%/').replaceAll('%c%', 'admin').replaceAll('%t%', mod_type).value() + underscore_format + '.twig'), {
+                            classified_name: classify_format,
+                            module_type: mod_type
+                        }
+                    );
                 }
-            );
 
-        } else {
-            this.fs.copyTpl(
-                this.templatePath(oc_version + '/_admin_view.tpl'),
-                this.destinationPath(_s(ADMIN_VIEW_DIR).replaceAll('%t%', mod_type).value() + underscore_format + '.tpl'), {
-                    underscored_name: underscore_format,
-                    module_type: mod_type
+                if( oc_version == '2.x' ) {
+                    // ADMIN
+                    this.fs.copyTpl(
+                        // Estract item
+                        this.templatePath(oc_version + '/' + mod_type + '/_admin_controller.php'),
+                        // Get location and copy
+                        this.destinationPath(_s('upload/%c%/controller/extension/%t%/').replaceAll('%c%', 'admin').replaceAll('%t%', mod_type).value() + underscore_format + '.php'), {
+                            classified_name: classify_format,
+                            module_type: mod_type
+                        }
+                    );
+                    this.fs.copyTpl(
+                        // Estract item
+                        this.templatePath(oc_version + '/' + mod_type + '/_admin_model.php'),
+                        // Get location and copy
+                        this.destinationPath(_s('upload/%c%/controller/extension/%t%/').replaceAll('%c%', 'admin').replaceAll('%t%', mod_type).value() + underscore_format + '.php'), {
+                            classified_name: classify_format,
+                            module_type: mod_type
+                        }
+                    );
+                    this.fs.copyTpl(
+                        // Estract item
+                        this.templatePath(oc_version + '/' + mod_type + '/_admin_langauge.php'),
+                        // Get location and copy
+                        this.destinationPath(_s('upload/%c%/controller/extension/%t%/').replaceAll('%c%', 'admin').replaceAll('%t%', mod_type).value() + underscore_format + '.php'), {
+                            classified_name: classify_format,
+                            module_type: mod_type
+                        }
+                    );
+                    this.fs.copyTpl(
+                        // Estract item
+                        this.templatePath(oc_version + '/' + mod_type + '/_admin_view.tpl'),
+                        // Get location and copy
+                        this.destinationPath(_s('upload/%c%/controller/extension/%t%/').replaceAll('%c%', 'admin').replaceAll('%t%', mod_type).value() + underscore_format + '.tpl'), {
+                            classified_name: classify_format,
+                            module_type: mod_type
+                        }
+                    );
                 }
-            );
+
+                if( oc_version == '1.5' ) {
+                    // ADMIN
+                    this.fs.copyTpl(
+                        // Estract item
+                        this.templatePath(oc_version + '/' + mod_type + '/_admin_controller.php'),
+                        // Get location and copy
+                        this.destinationPath(_s('upload/%c%/controller/extension/%t%/').replaceAll('%c%', 'admin').replaceAll('%t%', mod_type).value() + underscore_format + '.php'), {
+                            classified_name: classify_format,
+                            module_type: mod_type
+                        }
+                    );
+                    this.fs.copyTpl(
+                        // Estract item
+                        this.templatePath(oc_version + '/' + mod_type + '/_admin_model.php'),
+                        // Get location and copy
+                        this.destinationPath(_s('upload/%c%/controller/extension/%t%/').replaceAll('%c%', 'admin').replaceAll('%t%', mod_type).value() + underscore_format + '.php'), {
+                            classified_name: classify_format,
+                            module_type: mod_type
+                        }
+                    );
+                    this.fs.copyTpl(
+                        // Estract item
+                        this.templatePath(oc_version + '/' + mod_type + '/_admin_langauge.php'),
+                        // Get location and copy
+                        this.destinationPath(_s('upload/%c%/controller/extension/%t%/').replaceAll('%c%', 'admin').replaceAll('%t%', mod_type).value() + underscore_format + '.php'), {
+                            classified_name: classify_format,
+                            module_type: mod_type
+                        }
+                    );
+                    this.fs.copyTpl(
+                        // Estract item
+                        this.templatePath(oc_version + '/' + mod_type + '/_admin_view.tpl'),
+                        // Get location and copy
+                        this.destinationPath(_s('upload/%c%/controller/extension/%t%/').replaceAll('%c%', 'admin').replaceAll('%t%', mod_type).value() + underscore_format + '.tpl'), {
+                            classified_name: classify_format,
+                            module_type: mod_type
+                        }
+                    );
+                }
+                
+                break;
+            /**
+             * CREATE MODULE
+             */
+            case 'module':
+
+                if( oc_version == '3.x' ) {
+                    // ADMIN
+                    this.fs.copyTpl(
+                        // Estract item
+                        this.templatePath(oc_version + '/' + mod_type + '/_admin_controller.php'),
+                        // Get location and copy
+                        this.destinationPath(_s('upload/%c%/controller/extension/%t%/').replaceAll('%c%', 'admin').replaceAll('%t%', mod_type).value() + underscore_format + '.php'), {
+                            classified_name: classify_format,
+                            module_type: mod_type
+                        }
+                    );
+                    this.fs.copyTpl(
+                        // Estract item
+                        this.templatePath(oc_version + '/' + mod_type + '/_admin_model.php'),
+                        // Get location and copy
+                        this.destinationPath(_s('upload/%c%/controller/extension/%t%/').replaceAll('%c%', 'admin').replaceAll('%t%', mod_type).value() + underscore_format + '.php'), {
+                            classified_name: classify_format,
+                            module_type: mod_type
+                        }
+                    );
+                    this.fs.copyTpl(
+                        // Estract item
+                        this.templatePath(oc_version + '/' + mod_type + '/_admin_langauge.php'),
+                        // Get location and copy
+                        this.destinationPath(_s('upload/%c%/controller/extension/%t%/').replaceAll('%c%', 'admin').replaceAll('%t%', mod_type).value() + underscore_format + '.php'), {
+                            classified_name: classify_format,
+                            module_type: mod_type
+                        }
+                    );
+                    this.fs.copyTpl(
+                        // Estract item
+                        this.templatePath(oc_version + '/' + mod_type + '/_admin_view.twig'),
+                        // Get location and copy
+                        this.destinationPath(_s('upload/%c%/controller/extension/%t%/').replaceAll('%c%', 'admin').replaceAll('%t%', mod_type).value() + underscore_format + '.twig'), {
+                            classified_name: classify_format,
+                            module_type: mod_type
+                        }
+                    );
+                    // CATALOG
+                    this.fs.copyTpl(
+                        // Estract item
+                        this.templatePath(oc_version + '/' + mod_type + '/_catalog_controller.php'),
+                        // Get location and copy
+                        this.destinationPath(_s('upload/%c%/controller/extension/%t%/').replaceAll('%c%', 'catalog').replaceAll('%t%', mod_type).value() + underscore_format + '.php'), {
+                            classified_name: classify_format,
+                            module_type: mod_type
+                        }
+                    );
+                    this.fs.copyTpl(
+                        // Estract item
+                        this.templatePath(oc_version + '/' + mod_type + '/_catalog__model.php'),
+                        // Get location and copy
+                        this.destinationPath(_s('upload/%c%/controller/extension/%t%/').replaceAll('%c%', 'catalog').replaceAll('%t%', mod_type).value() + underscore_format + '.php'), {
+                            classified_name: classify_format,
+                            module_type: mod_type
+                        }
+                    );
+                    this.fs.copyTpl(
+                        // Estract item
+                        this.templatePath(oc_version + '/' + mod_type + '/_catalog__langauge.php'),
+                        // Get location and copy
+                        this.destinationPath(_s('upload/%c%/controller/extension/%t%/').replaceAll('%c%', 'catalog').replaceAll('%t%', mod_type).value() + underscore_format + '.php'), {
+                            classified_name: classify_format,
+                            module_type: mod_type
+                        }
+                    );
+                    this.fs.copyTpl(
+                        // Estract item
+                        this.templatePath(oc_version + '/' + mod_type + '/_catalog__view.twig'),
+                        // Get location and copy
+                        this.destinationPath(_s('upload/%c%/controller/extension/%t%/').replaceAll('%c%', 'catalog').replaceAll('%t%', mod_type).value() + underscore_format + '.twig'), {
+                            classified_name: classify_format,
+                            module_type: mod_type
+                        }
+                    );
+                }
+
+                if( oc_version == '2.x' ) {
+                    // ADMIN
+                    this.fs.copyTpl(
+                        // Estract item
+                        this.templatePath(oc_version + '/' + mod_type + '/_admin_controller.php'),
+                        // Get location and copy
+                        this.destinationPath(_s('upload/%c%/controller/extension/%t%/').replaceAll('%c%', 'admin').replaceAll('%t%', mod_type).value() + underscore_format + '.php'), {
+                            classified_name: classify_format,
+                            module_type: mod_type
+                        }
+                    );
+                    this.fs.copyTpl(
+                        // Estract item
+                        this.templatePath(oc_version + '/' + mod_type + '/_admin_model.php'),
+                        // Get location and copy
+                        this.destinationPath(_s('upload/%c%/controller/extension/%t%/').replaceAll('%c%', 'admin').replaceAll('%t%', mod_type).value() + underscore_format + '.php'), {
+                            classified_name: classify_format,
+                            module_type: mod_type
+                        }
+                    );
+                    this.fs.copyTpl(
+                        // Estract item
+                        this.templatePath(oc_version + '/' + mod_type + '/_admin_langauge.php'),
+                        // Get location and copy
+                        this.destinationPath(_s('upload/%c%/controller/extension/%t%/').replaceAll('%c%', 'admin').replaceAll('%t%', mod_type).value() + underscore_format + '.php'), {
+                            classified_name: classify_format,
+                            module_type: mod_type
+                        }
+                    );
+                    this.fs.copyTpl(
+                        // Estract item
+                        this.templatePath(oc_version + '/' + mod_type + '/_admin_view.tpl'),
+                        // Get location and copy
+                        this.destinationPath(_s('upload/%c%/controller/extension/%t%/').replaceAll('%c%', 'admin').replaceAll('%t%', mod_type).value() + underscore_format + '.tpl'), {
+                            classified_name: classify_format,
+                            module_type: mod_type
+                        }
+                    );
+                    // CATALOG
+                    this.fs.copyTpl(
+                        // Estract item
+                        this.templatePath(oc_version + '/' + mod_type + '/_catalog_controller.php'),
+                        // Get location and copy
+                        this.destinationPath(_s('upload/%c%/controller/extension/%t%/').replaceAll('%c%', 'catalog').replaceAll('%t%', mod_type).value() + underscore_format + '.php'), {
+                            classified_name: classify_format,
+                            module_type: mod_type
+                        }
+                    );
+                    this.fs.copyTpl(
+                        // Estract item
+                        this.templatePath(oc_version + '/' + mod_type + '/_catalog__model.php'),
+                        // Get location and copy
+                        this.destinationPath(_s('upload/%c%/controller/extension/%t%/').replaceAll('%c%', 'catalog').replaceAll('%t%', mod_type).value() + underscore_format + '.php'), {
+                            classified_name: classify_format,
+                            module_type: mod_type
+                        }
+                    );
+                    this.fs.copyTpl(
+                        // Estract item
+                        this.templatePath(oc_version + '/' + mod_type + '/_catalog__langauge.php'),
+                        // Get location and copy
+                        this.destinationPath(_s('upload/%c%/controller/extension/%t%/').replaceAll('%c%', 'catalog').replaceAll('%t%', mod_type).value() + underscore_format + '.php'), {
+                            classified_name: classify_format,
+                            module_type: mod_type
+                        }
+                    );
+                    this.fs.copyTpl(
+                        // Estract item
+                        this.templatePath(oc_version + '/' + mod_type + '/_catalog__view.tpl'),
+                        // Get location and copy
+                        this.destinationPath(_s('upload/%c%/controller/extension/%t%/').replaceAll('%c%', 'catalog').replaceAll('%t%', mod_type).value() + underscore_format + '.tpl'), {
+                            classified_name: classify_format,
+                            module_type: mod_type
+                        }
+                    );
+                }
+
+                if( oc_version == '1.5' ) {
+                    // ADMIN
+                    this.fs.copyTpl(
+                        // Estract item
+                        this.templatePath(oc_version + '/' + mod_type + '/_admin_controller.php'),
+                        // Get location and copy
+                        this.destinationPath(_s('upload/%c%/controller/extension/%t%/').replaceAll('%c%', 'admin').replaceAll('%t%', mod_type).value() + underscore_format + '.php'), {
+                            classified_name: classify_format,
+                            module_type: mod_type
+                        }
+                    );
+                    this.fs.copyTpl(
+                        // Estract item
+                        this.templatePath(oc_version + '/' + mod_type + '/_admin_model.php'),
+                        // Get location and copy
+                        this.destinationPath(_s('upload/%c%/controller/extension/%t%/').replaceAll('%c%', 'admin').replaceAll('%t%', mod_type).value() + underscore_format + '.php'), {
+                            classified_name: classify_format,
+                            module_type: mod_type
+                        }
+                    );
+                    this.fs.copyTpl(
+                        // Estract item
+                        this.templatePath(oc_version + '/' + mod_type + '/_admin_langauge.php'),
+                        // Get location and copy
+                        this.destinationPath(_s('upload/%c%/controller/extension/%t%/').replaceAll('%c%', 'admin').replaceAll('%t%', mod_type).value() + underscore_format + '.php'), {
+                            classified_name: classify_format,
+                            module_type: mod_type
+                        }
+                    );
+                    this.fs.copyTpl(
+                        // Estract item
+                        this.templatePath(oc_version + '/' + mod_type + '/_admin_view.tpl'),
+                        // Get location and copy
+                        this.destinationPath(_s('upload/%c%/controller/extension/%t%/').replaceAll('%c%', 'admin').replaceAll('%t%', mod_type).value() + underscore_format + '.tpl'), {
+                            classified_name: classify_format,
+                            module_type: mod_type
+                        }
+                    );
+                    // CATALOG
+                    this.fs.copyTpl(
+                        // Estract item
+                        this.templatePath(oc_version + '/' + mod_type + '/_catalog_controller.php'),
+                        // Get location and copy
+                        this.destinationPath(_s('upload/%c%/controller/extension/%t%/').replaceAll('%c%', 'catalog').replaceAll('%t%', mod_type).value() + underscore_format + '.php'), {
+                            classified_name: classify_format,
+                            module_type: mod_type
+                        }
+                    );
+                    this.fs.copyTpl(
+                        // Estract item
+                        this.templatePath(oc_version + '/' + mod_type + '/_catalog__model.php'),
+                        // Get location and copy
+                        this.destinationPath(_s('upload/%c%/controller/extension/%t%/').replaceAll('%c%', 'catalog').replaceAll('%t%', mod_type).value() + underscore_format + '.php'), {
+                            classified_name: classify_format,
+                            module_type: mod_type
+                        }
+                    );
+                    this.fs.copyTpl(
+                        // Estract item
+                        this.templatePath(oc_version + '/' + mod_type + '/_catalog__langauge.php'),
+                        // Get location and copy
+                        this.destinationPath(_s('upload/%c%/controller/extension/%t%/').replaceAll('%c%', 'catalog').replaceAll('%t%', mod_type).value() + underscore_format + '.php'), {
+                            classified_name: classify_format,
+                            module_type: mod_type
+                        }
+                    );
+                    this.fs.copyTpl(
+                        // Estract item
+                        this.templatePath(oc_version + '/' + mod_type + '/_catalog__view.tpl'),
+                        // Get location and copy
+                        this.destinationPath(_s('upload/%c%/controller/extension/%t%/').replaceAll('%c%', 'catalog').replaceAll('%t%', mod_type).value() + underscore_format + '.tpl'), {
+                            classified_name: classify_format,
+                            module_type: mod_type
+                        }
+                    );
+                }
+
+                break;
+
+ /*           case 'payment':
+
+                break;
+
+            case 'shipping':
+
+                break;
+
+            case 'feed':
+
+                break;
+
+            case 'core':
+
+                break;
+*/
+        
+            default:
+                break;
         }
 
-        // CATALOG
-        if(this.props.mod_type != 'dashboard') {
-            this.fs.copyTpl(
-                this.templatePath(oc_version + '/_catalog_controller.php'),
-                this.destinationPath(_s(CONTROLLER_DIR).replaceAll('%c%', 'catalog').replaceAll('%t%', mod_type).value() + underscore_format + '.php'), {
-                    classified_name: classify_format,
-                    underscored_name: underscore_format,
-                    module_type: mod_type
-                }
-            );
-    
-            this.fs.copyTpl(
-                this.templatePath(oc_version + '/_catalog_language.php'),
-                this.destinationPath(_s(LANGUAGE_DIR).replaceAll('%c%', 'catalog').replaceAll('%t%', mod_type).value() + underscore_format + '.php'), {
-                    titleized_name: titleize_format,
-                    module_type: mod_type
-                }
-            );
-    
-            this.fs.copyTpl(
-                this.templatePath(oc_version + '/_catalog_model.php'),
-                this.destinationPath(_s(MODEL_DIR).replaceAll('%c%', 'catalog').replaceAll('%t%', mod_type).value() + underscore_format + '.php'), {
-                    classified_name: classify_format,
-                    module_type: mod_type
-                }
-            );
-            
-            if( oc_version == '3.x' ) {
-                this.fs.copyTpl(
-                    this.templatePath(oc_version + '/_catalog_view.twig'),
-                    this.destinationPath(_s(CATALOG_VIEW_DIR).replaceAll('%t%', mod_type).value() + underscore_format + '.twig'), {
-                        titleized_name: titleize_format,
-                        module_type: mod_type
-                    }
-                );
-            } else {
-                this.fs.copyTpl(
-                    this.templatePath(oc_version + '/_catalog_view.tpl'),
-                    this.destinationPath(_s(CATALOG_VIEW_DIR).replaceAll('%t%', mod_type).value() + underscore_format + '.tpl'), {
-                        titleized_name: titleize_format,
-                        module_type: mod_type
-                    }
-                );
-            }
-        }
 
         // OCMOD
         if(this.props.ocmod == true) {
